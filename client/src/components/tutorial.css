@@ -1,0 +1,15 @@
+
+  .item {
+    /* height: 50px; */
+    border: 1px solid;
+    /* border-radius: 4px; */
+    /* background: #69ff8c; */
+    /* margin: 16px; */
+  }
+
+  .flex-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+    height: 96vh;
+  }
