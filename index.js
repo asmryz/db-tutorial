@@ -89,7 +89,7 @@ app.post("/terminals", async function (req, res) {
         "oracle-11.2.0.2",
         "bash",
         "-c",
-        `export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe && /u01/app/oracle/product/11.2.0/xe/bin/sqlplus asim/welcome123@localhost`,
+        `export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe && /u01/app/oracle/product/11.2.0/xe/bin/sqlplus hr/hr@localhost`,
     ];
     var cols = parseInt(req.query.cols);
     var rows = parseInt(req.query.rows);
