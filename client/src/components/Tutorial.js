@@ -13,7 +13,7 @@ const Tutorial = ({ created, filename, execute }) => {
     //let URL = `http://${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}`;
     const termRef = useRef();
     const targetRef = useRef();
-    const [pid, setPid] = useState(sessionStorage.getItem("pid") || -1);
+    const [pid, setPid] = useState(sessionStorage.getItem("pid") || 0);
     const [termsocket, setTermSocket] = useState(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     //const [size, setSize] = useState({ rows: 0, cols: 0 })
@@ -28,15 +28,10 @@ const Tutorial = ({ created, filename, execute }) => {
             method: "POST",
         }).then((res) =>
             res.text().then(async (pid) => {
+                console.log(`new term pid >> ${pid}`);
                 setPid(pid);
                 sessionStorage.setItem("pid", pid);
-                let socket = new WebSocket(`ws://${window.location.host}/terminals/${pid}`);
-                terminal.loadAddon(new AttachAddon(socket));
-                setTermSocket(socket);
-                await terminal.open(termRef.current);
-                setTimeout(() => {
-                    socket.send("clear screen\n");
-                }, 1000);
+                establish(pid);
             })
         );
     };
@@ -52,6 +47,7 @@ const Tutorial = ({ created, filename, execute }) => {
     }, []);
 
     useEffect(() => {
+        console.log(`pid >> ${pid}`);
         if (dimensions.width !== 0) {
             //console.log(`Terminal creation statrs ${dimensions.width}`);
             terminal = new Terminal({
@@ -65,12 +61,27 @@ const Tutorial = ({ created, filename, execute }) => {
                 //     cursor: "#000000",
                 // },
             });
-            (async () => {
-                await getTerm();
-            })();
-            //termsocket.send(`clear screen\n`);
+
+            if (pid === 0) {
+                (async () => {
+                    await getTerm();
+                })();
+            } else {
+                establish(pid);
+            }
         }
     }, [dimensions.width]);
+
+    const establish = (pid) => {
+        let socket = new WebSocket(`ws://${window.location.host}/terminals/${pid}`);
+        console.log(socket.readyState);
+        terminal.loadAddon(new AttachAddon(socket));
+        setTermSocket(socket);
+        terminal.open(termRef.current);
+        setTimeout(() => {
+            socket.send("clear screen\n");
+        }, 1000);
+    };
 
     const runCmd = (cmd) => {
         //console.log(cmd);
@@ -174,11 +185,3 @@ const Tutorial = ({ created, filename, execute }) => {
 };
 
 export default Tutorial;
-/*
-                                    (e, cmd) => {
-                                    //termsocket.send(`${e.target.innerText}\n`);
-                                    console.log(e.target.innerText, cmd);
-                                    }
-
-
-*/

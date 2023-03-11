@@ -44,12 +44,12 @@ expressWs.app.ws("/terminals/:pid", function (ws, req) {
     ws.on("message", function (msg) {
         term.write(msg);
     });
-    ws.on("close", function () {
-        term.kill();
-        console.log("Closed terminal " + term.pid);
-        // Clean things up
-        delete terminals[term.pid];
-    });
+    // ws.on("close", function () {
+    //     term.kill();
+    //     console.log("Closed terminal " + term.pid);
+    //     // Clean things up
+    //     delete terminals[term.pid];
+    // });
 });
 
 app.post("/save", (req, res) => {
