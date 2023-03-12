@@ -13,3 +13,6 @@
     margin: 15px;
     height: 96vh;
   }
+  a {
+    text-decoration: none;
+}
